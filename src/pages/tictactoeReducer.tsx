@@ -18,6 +18,7 @@ export enum TicTacToeType {
     SWITCH_PLAYER = 'SWITCH_PLAYER',
     CHECK_WINNER = 'CHECK_WINNER',
     GAME_WON = 'GAME_WON',
+    UNDO = 'UNDO',
     GOTO_HISTORY = 'GOTO_HISTORY',
 }
 
@@ -52,12 +53,20 @@ export const ticTacToeReducer = (state: ITicTacToe, action: any): ITicTacToe => 
                 ...state,
                 currentPlayer: !state.currentPlayer
             }
-        case TicTacToeType.GAME_WON: {
+        case TicTacToeType.GAME_WON: 
             return {
                 ...state,
                 winner: getCurrentPlayer(!state.currentPlayer)
+            }      
+        case TicTacToeType.UNDO:
+            const lastItem = Array.from(state.values).slice(0, -1);
+            return {
+                ...state,
+                currentPlayer: !state.currentPlayer,
+                values: new Map(lastItem),
+                boxFilled: state.boxFilled - 1,
+                winner: undefined,
             }
-        }
         default:
             return state;
     }

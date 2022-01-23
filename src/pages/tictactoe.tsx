@@ -73,7 +73,7 @@ const TicTacToe = () => {
             data.push(`${item} clicked at square ${parseInt(key) + 1}.`);
         })
         
-        return data;
+        return data.reverse();
     }
 
     return (
@@ -89,12 +89,15 @@ const TicTacToe = () => {
                         )}
                     <button className={`bg-orange-500 hover:bg-orange-400 duration-500 transition px-5 py-3 my-5 text-white rounded-md ${winner && 'animate-bounce'}`} onClick={() => reset()}>Reset</button>
                 <div className="text-2xl">
-                    Current Player: {getCurrentPlayer()}
+                    {!winner && (
+                        <h2 className="">Current Player: {getCurrentPlayer()}</h2>
+                    )}
                     </div>
                     <div className="log space-y-2">
                         <h2 className="text-3xl font-semibold">Log:</h2>
-                        {renderLog().map(el =>
-                            <p className="text-gray-400">{el}</p>    
+                        <button className={`bg-indigo-500 text-white px-4 py-2 rounded-md ${values.size > 0 ? 'block' : 'hidden'}`} onClick={() => dispatch({ type: TicTacToeType.UNDO })}>Undo</button>
+                        {renderLog().map((el, index) =>
+                            <p key={index} className="text-gray-400">{el}</p>    
                         )}
                     </div>
                     </div>
@@ -103,7 +106,7 @@ const TicTacToe = () => {
                     <div className="board border-8 border-orange-700 rounded-2xl">
                 <div className="grid grid-cols-3">
                     {Array(9).fill(null).map((el, index) => 
-                     <Button currentIndex={String(index)} value={values.get(String(index))} winner={winner} onClick={onButtonClick} />
+                     <Button key={index} currentIndex={String(index)} value={values.get(String(index))} winner={winner} onClick={onButtonClick} />
                     )}
                     </div>
                 </div>
