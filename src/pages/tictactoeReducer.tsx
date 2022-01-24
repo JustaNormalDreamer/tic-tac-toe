@@ -1,8 +1,14 @@
+interface ITotalScore {
+    player1: number;
+    player2: number;
+}
+
 export interface ITicTacToe {
     currentPlayer: boolean;
     boxFilled: number;
     values: Map<string, string>;
     winner?: string;
+    totalScore: ITotalScore;
 }
 
 export const initialState = {
@@ -10,6 +16,10 @@ export const initialState = {
     boxFilled: 0,
     values: new Map<string, string>(),
     winner: undefined,
+    totalScore: {
+        player1: 0,
+        player2: 0
+    }
 }
 
 export enum TicTacToeType {
@@ -20,6 +30,7 @@ export enum TicTacToeType {
     GAME_WON = 'GAME_WON',
     UNDO = 'UNDO',
     GOTO_HISTORY = 'GOTO_HISTORY',
+    NEW_GAME = 'NEW_GAME',
 }
 
 export const ticTacToeReducer = (state: ITicTacToe, action: any): ITicTacToe => {
@@ -36,6 +47,7 @@ export const ticTacToeReducer = (state: ITicTacToe, action: any): ITicTacToe => 
             return {
                 ...initialState,
                 values: new Map<string, string>(),
+                totalScore: state.totalScore,
             };
         case TicTacToeType.BOARD_CLICKED:
             return {
@@ -56,7 +68,11 @@ export const ticTacToeReducer = (state: ITicTacToe, action: any): ITicTacToe => 
         case TicTacToeType.GAME_WON: 
             return {
                 ...state,
-                winner: getCurrentPlayer(!state.currentPlayer)
+                winner: getCurrentPlayer(!state.currentPlayer),
+                totalScore: {
+                    player1: !state.currentPlayer ? state.totalScore.player1 + 1 : state.totalScore.player1,
+                    player2: state.currentPlayer ? state.totalScore.player2 + 1 : state.totalScore.player2
+                },
             }      
         case TicTacToeType.UNDO:
             const lastItem = Array.from(state.values).slice(0, -1);
@@ -66,6 +82,11 @@ export const ticTacToeReducer = (state: ITicTacToe, action: any): ITicTacToe => 
                 values: new Map(lastItem),
                 boxFilled: state.boxFilled - 1,
                 winner: undefined,
+            }
+        case TicTacToeType.NEW_GAME:
+            return {
+                ...initialState,
+                values: new Map<string, string>(),
             }
         default:
             return state;
