@@ -1,12 +1,12 @@
-import React from 'react'
+import React from 'react';
 import TicTacToe from './pages/tictactoe';
 
-const App =() => {
+const App = () => {
   return (
     <>
       <TicTacToe />
     </>
-  )
-}
+  );
+};
 
 export default App;
