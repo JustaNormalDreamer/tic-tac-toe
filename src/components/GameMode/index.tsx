@@ -7,8 +7,8 @@ interface IGameModeProps {
 
 const GameMode: React.FC<IGameModeProps> = ({ dispatch }) => {
   return (
-    <>
-      <div className="space-y-5 text-center">
+    <div className="flex h-screen w-full">
+      <div className="m-auto space-y-5 text-center">
         <div className="">
           <h2 className="text-4xl font-semibold">Game Mode</h2>
         </div>
@@ -37,7 +37,7 @@ const GameMode: React.FC<IGameModeProps> = ({ dispatch }) => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
