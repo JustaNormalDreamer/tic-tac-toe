@@ -3,11 +3,14 @@ interface ITotalScore {
   player2: number;
 }
 
+export type GameMode = 'singlePlayer' | 'multiPlayer';
+
 export interface ITicTacToe {
   currentPlayer: boolean;
   values: Map<string, string>;
   winner?: string;
   totalScore: ITotalScore;
+  mode?: GameMode;
 }
 
 export const initialState = {
@@ -28,10 +31,16 @@ export enum TicTacToeType {
   GAME_WON = 'GAME_WON',
   UNDO = 'UNDO',
   GOTO_HISTORY = 'GOTO_HISTORY',
-  NEW_GAME = 'NEW_GAME'
+  NEW_GAME = 'NEW_GAME',
+  CHOOSE_GAME_MODE = 'CHOOSE_GAME_MODE'
 }
 
-export const ticTacToeReducer = (state: ITicTacToe, action: any): ITicTacToe => {
+export type IAction = {
+  type: TicTacToeType;
+  payload?: any;
+};
+
+export const ticTacToeReducer = (state: ITicTacToe, action: IAction): ITicTacToe => {
   const getCurrentPlayer = (current?: boolean): string => {
     if (typeof current === 'boolean') {
       return current ? 'Player I' : 'Player II';
@@ -41,9 +50,22 @@ export const ticTacToeReducer = (state: ITicTacToe, action: any): ITicTacToe => 
   };
 
   switch (action.type) {
+    case TicTacToeType.CHOOSE_GAME_MODE:
+      return {
+        ...initialState,
+        mode: action.payload,
+        values: new Map<string, string>()
+      };
+    case TicTacToeType.NEW_GAME:
+      return {
+        ...initialState,
+        mode: state.mode,
+        values: new Map<string, string>()
+      };
     case TicTacToeType.RESET:
       return {
         ...initialState,
+        mode: state.mode,
         values: new Map<string, string>(),
         totalScore: state.totalScore
       };
@@ -78,11 +100,6 @@ export const ticTacToeReducer = (state: ITicTacToe, action: any): ITicTacToe => 
         currentPlayer: !state.currentPlayer,
         values: new Map(lastItem),
         winner: undefined
-      };
-    case TicTacToeType.NEW_GAME:
-      return {
-        ...initialState,
-        values: new Map<string, string>()
       };
     default:
       return state;
